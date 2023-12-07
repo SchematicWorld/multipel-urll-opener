@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head><meta http-equiv="cache-control" content="no-cache"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="-1"><style type="text/css">body {
+  font-family: sans-serif;
+  margin: 20px;
+  text-align: center;
+}
+
+#urls {
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+}
+
+#progress-indicator {
+  display: flex;
+  width: 100%;
+  height: 30px;
+  background-color: #007bff;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+}
+
+.progress-bar {
+  background-color: blue;
+  height: 100%;
+  width: 0%;
+  border-radius: 5px;
+  transition: width 0.2s ease-in-out;
+}
+
+.progress-text {
+  color: white;
+  font-size: 12px;
+  margin-left: 10px;
+}
+
+.buttons {
+  margin-top: 10px;
+  text-align: center;
+}
+
+button {
+  background-color: blue;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 5px;
+}</style>
+
+
+<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Multiple URLs</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h2>Open Multiple URLs</h2>
+    <p>This tool allows you to open multiple URLs at the same time by opening a new tab for each URL.</p>
+    <textarea id="urls" placeholder="Enter one URL per line"></textarea>
+    <span id="progress-indicator"></span>
+    <div class="buttons">
+        <button id="open-urls">Open URLs</button>
+        <button id="close-all" disabled="">Close All</button>
+    </div>
+    <script src="script.js"></script>
+
+
+<script>const MAX_URLS = 250; // Maximum number of URLs allowed
+const openUrlsButton = document.getElementById('open-urls');
+const urlsTextarea = document.getElementById('urls');
+const progressBar = document.querySelector('.progress-bar');
+const progressText = document.querySelector('.progress-text');
+
+let openedUrls = 0;
+
+openUrlsButton.addEventListener('click', function () {
+  const urls = urlsTextarea.value.trim().split('\n');
+  if (urls.length > MAX_URLS) {
+    alert(`Maximum allowed URLs is ${MAX_URLS}`);
+    return;
+  }
+
+  openedUrls = 0;
+  progressBar.style.width = 0;
+  progressText.textContent = `Opening ${openedUrls} of ${urls.length}`;
+
+  for (const url of urls) {
+    if (isValidUrl(url)) {
+      setTimeout(() => {
+  window.open(url, '_blank', 'noopener,noreferrer');
+  openedUrls++;
+  updateProgress();
+}, 0);
+    } else {
+      console.error(`Invalid URL: "${url}"`);
+    }
+  }
+});
+
+function updateProgress() {
+  progressBar.style.width = `${openedUrls / urls.length * 100}%`;
+  progressText.textContent = `Opening ${openedUrls} of ${urls.length}`;
+}
+
+function isValidUrl(url) {
+  try {
+    new URL(url);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+</script></body>
